@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><!--Made by Akshith Ravula-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Assignment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+        }
+
+        .container {
+            width: 40%;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #f0f0f0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .section {
+            display: none;
+        }
+
+        button {
+            margin-top: 20px;font-size: 18px;
+            padding: 10px 20px;
+            background-color: #000;
+            color: white;
+            border: none;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        input, textarea {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+            font-size: 29px;
+            color: #333;
+        }
+
+        h2 {font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 24px;
+            color: #000;
+        }
+        .sp{
+            position: absolute;top: 10%;right:5%;width:20%;background-color: transparent;height: auto;text-align: center;justify-content: center;align-items: center;overflow: hidden;
+        }
+        .sp h1 {
+            font-size: 3em;line-height: 2em;
+        }
+        .ec{
+position:absolute;top:30%;left:3%;width:auto;height: auto;transform: rotate(-90deg);font-size: 4em;letter-spacing: 2px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="sp">
+        <h1>Done<br> by<br>Akshith</h1>
+    </div>
+    <div class="ec">
+        Akshith
+    </div>
+    <div class="container">
+        <h1>jQuery Assignment</h1>
+        <div id="register-section" class="section">
+            <h2>Register</h2>
+            <form id="register-form">
+                <input type="text" id="register-username" name="username" placeholder="Username" required><br>
+                <input type="password" id="register-password" name="password" placeholder="Password" required><br>
+                <input type="text" id="register-phone" name="phone" placeholder="Phone" required><br>
+                <input type="email" id="register-email" name="email" placeholder="Email" required><br>
+                <button type="submit">Register</button>
+            </form>
+            <button class="show-login">Login</button>
+            <button class="show-contact">Contact</button>
+        </div>
+        <div id="login-section" class="section">
+            <h2>Login</h2>
+            <form id="login-form">
+                <input type="text" id="login-username" name="username" placeholder="Username" required><br>
+                <input type="password" id="login-password" name="password" placeholder="Password" required><br>
+                <button type="submit">Login</button>
+            </form>
+            <button class="show-register">Register</button>
+            <button class="show-contact">Contact</button>
+        </div>
+        <div id="contact-section" class="section">
+            <h2>Contact</h2>
+            <form id="contact-form">
+                <input type="text" id="contact-name" name="name" placeholder="Name" required><br>
+                <input type="email" id="contact-email" name="email" placeholder="Email" required><br>
+                <textarea id="contact-message" name="message" placeholder="Message" required></textarea><br>
+                <button type="submit">Submit</button>
+            </form>
+            <button class="show-register">Register</button>
+            <button class="show-login">Login</button>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.section').hide();
+            $('#register-section').show();
+
+            $('.show-login').click(function () {
+                $('.section').hide();
+                $('#login-section').fadeIn();
+            });
+
+            $('.show-register').click(function () {
+                $('.section').hide();
+                $('#register-section').fadeIn();
+            });
+
+            $('.show-contact').click(function () {
+                $('.section').hide();
+                $('#contact-section').fadeIn();
+            });
+
+            $('#register-form').submit(function (event) {
+                event.preventDefault();
+                const username = $('#register-username').val();
+                const password = $('#register-password').val();
+                const phone = $('#register-phone').val();
+                const email = $('#register-email').val();
+
+                if (username.length < 5) {
+                    alert("Username must be at least 5 characters long.");
+                    return;
+                }
+                if (password.length < 6) {
+                    alert("Password must be at least 6 characters long.");
+                    return;
+                }
+                const phoneRegex = /^[0-9]{10}$/;
+                if (!phoneRegex.test(phone)) {
+                    alert("Phone number must be 10 digits long.");
+                    return;
+                }
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert("Invalid email format.");
+                    return;
+                }
+
+                $.post('/register', $(this).serialize(), function (response) {
+                    alert(response);
+                });
+            });
+
+            $('#login-form').submit(function (event) {
+                event.preventDefault();
+                $.post('/login', $(this).serialize(), function (response) {
+                    alert(response);
+                }).fail(function () {
+                    alert("Invalid credentials");
+                });
+            });
+
+            $('#contact-form').submit(function (event) {
+                event.preventDefault();
+                $.post('/contact', $(this).serialize(), function (response) {
+                    alert(response);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
